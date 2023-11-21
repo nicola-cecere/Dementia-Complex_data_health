@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "complex-data-health"
+version = "0.1.0"
+description = ""
+authors = ["Nicola Cecere <nicola.cecere@mail.polimi.it>"]
+readme = "README.md"
+packages = [{include = "complex_data_health"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
