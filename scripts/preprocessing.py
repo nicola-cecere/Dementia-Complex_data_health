@@ -12,11 +12,11 @@ def preprocess_disease(ppi_file, dga_file):
     # Load disease-gene association data
     dga = pd.read_csv(dga_file, sep='\t')
 
-    # Lowercase disease names
-    dga['diseaseName'] = dga['diseaseName'].str.lower()
-
     # Filter out disease types that are 'group' or 'phenotype'
     dga = dga[(dga.diseaseType != 'group') & (dga.diseaseType != 'phenotype')]
+
+    # Lowercase disease names
+    dga['diseaseName'] = dga['diseaseName'].str.lower()
 
     # Count the number of genes associated with each disease
     num_genes = (dga.groupby('diseaseName')
