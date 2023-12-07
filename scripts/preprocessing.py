@@ -16,17 +16,20 @@ def preprocess_disease(ppi_file, dga_file):
     dga['diseaseName'] = dga['diseaseName'].str.lower()
 
     # Filter out disease types that are 'group' or 'phenotype'
-    filtered_dga = dga[(dga.diseaseType != 'group') & (dga.diseaseType != 'phenotype')]
+    dga = dga[(dga.diseaseType != 'group') & (dga.diseaseType != 'phenotype')]
 
     # Count the number of genes associated with each disease
-    num_genes = (filtered_dga.groupby('diseaseName')
-                 .agg({'geneSymbol': 'nunique'})
+    num_genes = (dga.groupby('diseaseName')
+                 .agg('count')
+                 .sort_values(by='geneSymbol')
                  .reset_index()
                  .rename(columns={'geneSymbol':'count_genes'}))
 
-    # Merge with the original data and filter diseases with at least 10 genes
-    dga = dga.merge(num_genes, on='diseaseName', how='inner')
-    dga = dga[dga.count_genes >= 10]
+    filtered_dga = dga.merge(num_genes,
+                             on='diseaseName',
+                             how='inner')
+
+    dga = filtered_dga[filtered_dga.count_genes>10][['geneSymbol', 'diseaseName']].drop_duplicates().reset_index(drop=True)
 
     return dga, ppi
 
